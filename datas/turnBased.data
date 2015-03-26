@@ -1,0 +1,32 @@
+{
+	"Game": {
+		"serverParentClasses": ["TurnBasedGame"],
+		"attributes": {
+			"currentPlayer": {
+				"type": "Player",
+				"description": "The player whose turn it is currently. That player can send commands. Other players cannot.",
+				"serverPredefined": true
+			},
+			"currentTurn": {
+				"type": "int",
+				"description": "The current turn number, starting at 0 for the first player's turn",
+				"default": 0,
+				"serverPredefined": true
+			},
+			"maxTurns": {
+				"type": "int",
+				"description": "The maximum number of turns before the game will automatically end.",
+				"default": 100,
+				"serverPredefined": true
+			}
+		}
+	},
+
+	"Player": {
+		"functions": {
+			"endTurn": {
+				"description": "Tells the server that this player is done with their turn."
+			}
+		}
+	}
+}
