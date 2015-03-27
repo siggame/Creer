@@ -71,7 +71,7 @@ def parse_data(key, path):
         datas[key] = data
 
 try:
-    git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    git_hash = (subprocess.check_output(['git', 'rev-parse', 'HEAD'])).decode("utf-8").rstrip()
 except:
     git_hash = "Error: git probably not installed"
 
