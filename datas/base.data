@@ -66,6 +66,10 @@
 			"clientType": {
 				"type": "string",
 				"description": "What type of client this is, e.g. 'Python', 'JavaScript', or some other language. For potential data mining purposes."
+			},
+			"timeRemaining": {
+				"type": "int",
+				"description": "The amount of time (in ms) remaining for this AI to send commands."
 			}
 		}
 	}
