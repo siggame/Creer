@@ -67,6 +67,24 @@
 				"type": "string",
 				"description": "What type of client this is, e.g. 'Python', 'JavaScript', or some other language. For potential data mining purposes."
 			},
+			"won": {
+				"type": "boolean",
+				"description": "if the player won the game or not",
+				"default": false
+			},
+			"lost": {
+				"type": "boolean",
+				"description": "if the player lost the game or not",
+				"default": false
+			},
+			"winReason": {
+				"type": "string",
+				"description": "the reason why the player won the game"
+			},
+			"loseReason": {
+				"type": "string",
+				"description": "the reason why the player lost the game"
+			},
 			"timeRemaining": {
 				"type": "int",
 				"description": "The amount of time (in ms) remaining for this AI to send commands."
