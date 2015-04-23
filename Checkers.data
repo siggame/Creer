@@ -24,11 +24,13 @@
 			},
 			"checkerMoved": {
 				"type": "Checker",
-				"description": "The checker that last moved and must be moved because only one checker can move during each players turn."
+				"description": "The checker that last moved and must be moved because only one checker can move during each players turn.",
+				"arenaInterest": "sum"
 			},
 			"checkerMovedJumped": {
 				"type": "boolean",
-				"description": "If the last checker that moved jumped, meaning it can move again."
+				"description": "If the last checker that moved jumped, meaning it can move again.",
+				"arenaInterest": "sum"
 			}
 		}
 	},
@@ -51,7 +53,8 @@
 			"kinged": {
 				"type": "boolean",
 				"description": "If the checker has been kinged and can move backwards.",
-				"default": false
+				"default": false,
+				"arenaInterest": "sum"
 			}
 		},
 		"functions": {
@@ -69,6 +72,20 @@
 						"description": "The y coordinate to move to."
 					}
 				]
+			}
+		}
+	},
+
+	"Player": {
+		"attributes": {
+			"checkers": {
+				"type": "array",
+				"subType": "Checker",
+				"description": "All the checkers currently in the game owned by this player"
+			},
+			"yDirection": {
+				"type": "int",
+				"description": "The direction your checkers must go along the y-axis until kinged"
 			}
 		}
 	}

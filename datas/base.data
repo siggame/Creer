@@ -29,7 +29,7 @@
 		"description": "An object in the game. The most basic class that all game classes should inherit from automatically.",
 		"attributes": {
 			"id": {
-				"type": "int",
+				"type": "string",
 				"description": "A unique id for each instance of a GameObject or a sub class. Used for client and server communication. Should never change value after being set.",
 				"serverPredefined": true
 			},
