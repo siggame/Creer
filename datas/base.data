@@ -1,10 +1,12 @@
 {
+	"AI": {},
+
 	"Game": {
 		"numberOfPlayers": 2,
 		"attributes": {
 			"gameObjects": {
 				"type": "dictionary",
-				"keyType": "int",
+				"keyType": "string",
 				"valueType": "GameObject",
 				"description": "A mapping of every game object's ID to the actual game object. Primarily used by the server and client to easily refer to the game objects via ID.",
 				"serverPredefined": true
@@ -13,12 +15,6 @@
 				"type": "array",
 				"subType": "Player",
 				"description": "List of all the players in the game.",
-				"serverPredefined": true
-			},
-			"currentPlayers": {
-				"type": "array",
-				"subType": "Player",
-				"description": "List of all the players who can send commands to the server.",
 				"serverPredefined": true
 			}
 		}

@@ -9,7 +9,6 @@ import subprocess
 import re
 
 parser = argparse.ArgumentParser(description='Runs the Creer game generator with a main data file against imput templates to generate an output skeleton game framework')
-
 parser.add_argument('-m, --main', action='store', dest='main', default='./main.data', help='the file that should be treated as the main data file for game generation')
 parser.add_argument('-o, --output', action='store', dest='output', required=True, help='the path to the folder to put generated folders and files into.')
 parser.add_argument('-i, --input', action='store', dest='input', nargs='+', required=True, help='the path(s) to look for templates in "_templates/" to build output from. can be a list of inputs seperated via spaces')
@@ -107,6 +106,9 @@ while len(parent_datas) > 0:
     extend(prototype, parent_datas.pop())
 
 def default_game_obj(obj, key):
+    if not 'description' in obj:
+        raise Exception("no 'description' in obj '{0}'".format(key))
+
     if not 'parentClasses' in obj:
         obj['parentClasses'] = [] # parentClasses are classes defined in the data
 
@@ -115,12 +117,6 @@ def default_game_obj(obj, key):
 
     if not 'attributes' in obj:
         obj['attributes'] = {}
-
-    if not 'functions' in obj:
-        obj['functions'] = {}
-
-    if not 'description' in obj:
-        raise Exception("no 'description' in obj '{0}'".format(key))
 
     if not 'attributes' in obj:
         obj['attributes'] = {}
@@ -131,10 +127,13 @@ def default_game_obj(obj, key):
         if not 'type' in attribute_parms:
             raise Exception("no 'type' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
 
+    default_functions_for(obj, key)
+
+def default_functions_for(obj, key, returns_command=True):
     if not 'functions' in obj:
         obj['functions'] = {}
 
-    for function_key, function_parms in obj['functions'].items():
+    for function_key, function_parms in obj["functions"].items():
         if not 'description' in function_parms:
             raise Exception("no 'description' in obj '{0}'s function '{1}'".format(key, function_key))
         if 'arguments' in function_parms:
@@ -145,13 +144,31 @@ def default_game_obj(obj, key):
                     raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
                 if not 'type' in arg_parms:
                     raise Exception("no 'type' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
+        if not 'return' in function_parms:
+            if returns_command:
+                function_parms['return'] = {}
+            else:
+                raise Exception("no 'return' in obj '{0}'s function '{1}'".format(key, function_key))
+        if not 'description' in function_parms['return']:
+            if returns_command:
+                function_parms['return']['description'] = "the command for the server to run this function against game logic, then send back the updated game state"
+            else:
+                raise Exception("no 'description' in obj '{0}'s function '{1}'s return".format(key, function_key))
+        if not 'type' in function_parms['return']:
+            if returns_command:
+                    function_parms['return']['type'] = "Command"
+            else:
+                raise Exception("no 'type' in obj '{0}'s function '{1}'s return".format(key, function_key))
 
 game_objects = {}
+
 game = prototype['Game']
 game_name = game['name']
 default_game_obj(game, game_name)
 
-
+ai = prototype['AI']
+del prototype['AI']
+default_functions_for(ai, "AI", returns_command=False)
 
 if len(game['serverParentClasses']) == 0:
     game['serverParentClasses'].append("BaseGame")
@@ -223,6 +240,7 @@ for input_directory in args.input:
                 'game': game,
                 'game_name': game_name,
                 'game_objs': game_objects,
+                'ai': ai,
                 'uncapitalize': uncapitalize,
                 'camel_case_to_underscore': camel_case_to_underscore,
                 'header': template_header,
