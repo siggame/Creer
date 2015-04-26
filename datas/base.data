@@ -73,11 +73,11 @@
 				"description": "if the player lost the game or not",
 				"default": false
 			},
-			"winReason": {
+			"reasonWon": {
 				"type": "string",
 				"description": "the reason why the player won the game"
 			},
-			"loseReason": {
+			"reasonLost": {
 				"type": "string",
 				"description": "the reason why the player lost the game"
 			},
