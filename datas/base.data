@@ -17,7 +17,7 @@
 			},
 			"players": {
 				"type": "array",
-				"subType": "Player",
+				"valueType": "Player",
 				"description": "List of all the players in the game.",
 				"serverPredefined": true
 			}
@@ -35,7 +35,7 @@
 			},
 			"logs": {
 				"type": "array",
-				"subType": "string",
+				"valueType": "string",
 				"description": "Any strings logged will be stored here when this game object logs the strings. Intended for debugging.",
 				"serverPredefined": true
 			}
