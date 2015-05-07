@@ -28,14 +28,21 @@ def build_all(prototype, input, output, clean=False):
 
                 filepath = os.path.join(root, filename)
                 dirs = list_dirs(filepath)
+                print("DIRS", *dirs)
                 output_path = ""
                 for i, d in enumerate(dirs):
-                    if d == templates_folder:
-                        if i > 0:
-                            output_path = os.path.join(dirs[i-1], *dirs[i+1:])
+                    if d == templates_folder: # slice it off
+                        if output:
+                            if i > 0:
+                                output_path = os.path.join(dirs[i-1], *dirs[i+1:])
+                            else:
+                                output_path = os.path.join(*dirs[i+1:])
                         else:
-                            output_path = os.path.join(*dirs[i+1:])
+                            output_dirs = list(dirs)
+                            output_dirs.pop(i)
+                            output_path = os.path.join(*output_dirs)
                         break
+
 
                 print("templating", output_path)
                 with open(filepath, "r") as read_file:
@@ -74,7 +81,7 @@ def build_all(prototype, input, output, clean=False):
                 for p in parameters:
                     try:
                         templated_path = filepath_template.render(**p)
-                        system_path = os.path.join(output, templated_path)
+                        system_path = os.path.join(output, templated_path) if output else templated_path
 
                         merge_data = {}
                         if not clean and os.path.isfile(system_path): # then we need to have merge data in the existing file with the new one we would be creating
