@@ -46,6 +46,11 @@ def list_dirs(path):
 def uncapitalize(s):
     return s[:1].lower() + s[1:] if s else ''
 
+def extract_str(raw_string, start_marker, end_marker):
+    start = raw_string.index(start_marker) + len(start_marker)
+    end = raw_string.index(end_marker, start)
+    return raw_string[start:end]
+
 first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_cap_re = re.compile('([a-z0-9])([A-Z])')
 def camel_case_to_underscore(name):
@@ -216,6 +221,42 @@ for obj_key, obj in (copy_dict(game_objects, {'Game': game}).items()):
 
 
 
+
+MERGE_KEYWORD_START_PRE = "<<-- Creer-Merge: "
+MERGE_KEYWORD_START_POST = " -->>"
+MERGE_KEYWORD_END_PRE = "<<-- /Creer-Merge: "
+MERGE_KEYWORD_END_POST = " -->>"
+
+def merge_with_data(data, pre_comment, key, alt):
+    merged = []
+    merged.extend([pre_comment, MERGE_KEYWORD_START_PRE, key, MERGE_KEYWORD_START_POST," - whatever you put inbetween this comment and the / will be auto-merged.\n"])
+    if key in data:
+        merged.append(data[key])
+    else:
+        merged.append(alt)
+    merged.extend([pre_comment, MERGE_KEYWORD_END_PRE, key, MERGE_KEYWORD_END_POST])
+    return "".join(merged)
+
+def generate_merge_data(file_contents):
+    data = {}
+    recording = None
+    for line in file_contents:
+        if MERGE_KEYWORD_END_PRE in line:
+            recording = None
+        elif MERGE_KEYWORD_START_PRE in line:
+            split = line.split()
+            recording = extract_str(line, MERGE_KEYWORD_START_PRE, MERGE_KEYWORD_START_POST)
+            data[recording] = []
+        elif recording:
+            data[recording].append(line)
+
+    merge_data = {}
+    for key, lines in data.items():
+        merge_data[key] = "".join(lines)
+    return merge_data
+
+
+
 ### generate templates ###
 
 templates_folder = "_templates"
@@ -245,9 +286,9 @@ for input_directory in args.input:
             with open(filepath, "r") as read_file:
                 lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
                 filecontents_template = Template(read_file.read(), lookup=lookup)
-                filepath_template = Template(output_path, lookup=lookup)
 
-            
+            filepath_template = Template(output_path, lookup=lookup)
+
             base_parameters = {
                 'game': game,
                 'game_name': game_name,
@@ -261,7 +302,7 @@ for input_directory in args.input:
             }
             parameters = []
 
-            if 'obj_key' in extensionless: # then we are templating for all the game objects
+            if 'obj_key' in extensionless: # then we are templating for all the game + game objects
                 parameters.append(copy_dict(base_parameters, {
                     'obj_key': "Game",
                     'obj': game,
@@ -278,10 +319,25 @@ for input_directory in args.input:
             for p in parameters:
                 try:
                     templated_path = filepath_template.render(**p)
-                    print("  -> generating", templated_path)
+                    system_path = os.path.join(args.output, templated_path)
+
+                    merge_data = {}
+                    if not args.clean and os.path.isfile(system_path): # then we need to have merge data in the existing file with the new one we would be creating
+                        with open(system_path) as f:
+                            content = f.readlines()
+                            merge_data = generate_merge_data(content)
+
+                    print("  -> generating", system_path)
+
+                    def merge(pre_comment, key, alt):
+                        print("    + merging", key)
+                        return merge_with_data(merge_data, pre_comment, key, alt)
+                    p['merge'] = merge
+
+                    
                     generated_files.append({
                         'contents': filecontents_template.render(**p),
-                        'path': templated_path,
+                        'path': system_path,
                     })
                 except:
                     print(exceptions.text_error_template().render())
@@ -300,7 +356,7 @@ if args.clean:
             print(e)
 
 for generated_file in generated_files:
-    path = os.path.join(args.output, generated_file['path'])
+    path =  generated_file['path']
     if not os.path.exists(os.path.dirname(path)):
         os.makedirs(os.path.dirname(path))
 
