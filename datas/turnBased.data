@@ -3,9 +3,10 @@
 		"functions": {
 			"runTurn": {
 				"description": "This is called every time the AI is asked to respond with a command during their turn",
-				"return": {
-					"type": "Command",
-					"description": "the Command you want to run on the server this turn from a game object's command functions. If you do not return your player's endTurn() then this runTurn function will be called again after the game state updates."
+				"returns": {
+					"type": "boolean",
+					"description": "represents if you want to end your turn. true means end the turn, false means to keep your turn going and re-call runTurn()",
+					"default": true
 				}
 			}
 		}
@@ -30,14 +31,6 @@
 				"description": "The maximum number of turns before the game will automatically end.",
 				"default": 100,
 				"serverPredefined": true
-			}
-		}
-	},
-
-	"Player": {
-		"functions": {
-			"endTurn": {
-				"description": "Tells the server that this player is done with their turn."
 			}
 		}
 	}

@@ -1,8 +1,12 @@
 {
-	"AI": {},
+	"AI": {
+		"description": "The AI competitors will add logic to this AI so its functions return valid and smart values."
+	},
 
 	"Game": {
 		"numberOfPlayers": 2,
+		"maxInvalidsPerPlayer": 10,
+
 		"attributes": {
 			"gameObjects": {
 				"type": "dictionary",
@@ -40,6 +44,7 @@
 			"log": {
 				"description": "adds a message to this game object's log. Intended for debugging purposes.",
 				"serverPredefined": true,
+				"altersState": true,
 				"arguments": [
 					{
 						"name": "message",

@@ -1,4 +1,5 @@
 from mako.template import Template, exceptions
+from mako.lookup import TemplateLookup
 from time import gmtime, strftime
 import fnmatch
 import os
@@ -64,8 +65,8 @@ def parse_data(key, path):
         print("--PARSING", path)
         data = json.load(f)
         f.close()
-    except:
-        print("Error reading data file", path)
+    except ValueError as e:
+        print("Error reading data file '" + path + "' -", e)
         sys.exit()
     else:
         datas[key] = data
@@ -127,39 +128,43 @@ def default_game_obj(obj, key):
             raise Exception("no 'description' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
         if not 'type' in attribute_parms:
             raise Exception("no 'type' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
+        if not 'default' in attribute_parms:
+            attribute_parms['default'] = None
 
     default_functions_for(obj, key)
 
-def default_functions_for(obj, key, returns_command=True):
+def default_functions_for(obj, key):
     if not 'functions' in obj:
         obj['functions'] = {}
 
     for function_key, function_parms in obj["functions"].items():
         if not 'description' in function_parms:
             raise Exception("no 'description' in obj '{0}'s function '{1}'".format(key, function_key))
-        if 'arguments' in function_parms:
-            for i, arg_parms in enumerate(function_parms['arguments']):
-                if not 'name' in arg_parms:
-                    raise Exception("no 'name' in obj '{0}'s function '{1}'s parameter at index {2}".format(key, function_key, i))
-                if not 'description' in arg_parms:
-                    raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
-                if not 'type' in arg_parms:
-                    raise Exception("no 'type' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
-        if not 'return' in function_parms:
-            if returns_command:
-                function_parms['return'] = {}
-            else:
-                raise Exception("no 'return' in obj '{0}'s function '{1}'".format(key, function_key))
-        if not 'description' in function_parms['return']:
-            if returns_command:
-                function_parms['return']['description'] = "the command for the server to run this function against game logic, then send back the updated game state"
-            else:
+
+        if not 'arguments' in function_parms:
+            function_parms['arguments'] = []
+        argument_names = []
+        for i, arg_parms in enumerate(function_parms['arguments']):
+            if not 'name' in arg_parms:
+                raise Exception("no 'name' in obj '{0}'s function '{1}'s parameter at index {2}".format(key, function_key, i))
+            if not 'description' in arg_parms:
+                raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
+            if not 'type' in arg_parms:
+                raise Exception("no 'type' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
+            if not 'default' in arg_parms:
+                arg_parms['default'] = None
+            argument_names.append(arg_parms['name'])
+        function_parms['argument_names'] = argument_names
+
+        if 'returns' in function_parms:
+            if not 'description' in function_parms['returns']:
                 raise Exception("no 'description' in obj '{0}'s function '{1}'s return".format(key, function_key))
-        if not 'type' in function_parms['return']:
-            if returns_command:
-                    function_parms['return']['type'] = "Command"
-            else:
+            if not 'type' in function_parms['returns']:
                 raise Exception("no 'type' in obj '{0}'s function '{1}'s return".format(key, function_key))
+            if not 'default' in function_parms['returns']:
+                function_parms['returns']['default'] = None
+        else:
+            function_parms['returns'] = None
 
 game_objects = {}
 
@@ -169,7 +174,7 @@ default_game_obj(game, game_name)
 
 ai = prototype['AI']
 del prototype['AI']
-default_functions_for(ai, "AI", returns_command=False)
+default_functions_for(ai, "AI")
 
 if len(game['serverParentClasses']) == 0:
     game['serverParentClasses'].append("BaseGame")
@@ -220,6 +225,11 @@ for input_directory in args.input:
     full_path = os.path.join(input_directory, templates_folder)
     for root, dirnames, filenames in os.walk(full_path):
         for filename in filenames:
+            extensionless, extension = os.path.splitext(filename)
+
+            if extension == '.noCreer':
+                continue
+
             filepath = os.path.join(root, filename)
             dirs = list_dirs(filepath)
             output_path = ""
@@ -233,10 +243,11 @@ for input_directory in args.input:
 
             print("templating", output_path)
             with open(filepath, "r") as read_file:
-                filecontents_template = Template(read_file.read())
-                filepath_template = Template(output_path)
+                lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
+                filecontents_template = Template(read_file.read(), lookup=lookup)
+                filepath_template = Template(output_path, lookup=lookup)
 
-            extensionless = os.path.splitext(filename)[0]
+            
             base_parameters = {
                 'game': game,
                 'game_name': game_name,
@@ -245,10 +256,12 @@ for input_directory in args.input:
                 'uncapitalize': uncapitalize,
                 'camel_case_to_underscore': camel_case_to_underscore,
                 'header': template_header,
-                'json': json
+                'json': json,
+                'shared': {},
             }
             parameters = []
-            if 'obj_key' in extensionless:
+
+            if 'obj_key' in extensionless: # then we are templating for all the game objects
                 parameters.append(copy_dict(base_parameters, {
                     'obj_key': "Game",
                     'obj': game,

@@ -4,7 +4,6 @@
 	"Game": {
 		"name": "Checkers",
 		"description": "The simple version of American Checkers. An 8x8 board with 12 checkers on each side that must move diagonally to the opposing side until kinged. Very simple.",
-		"numberOfPlayers": 2,
 
 		"attributes": {
 			"boardWidth": {
@@ -60,6 +59,7 @@
 		"functions": {
 			"move": {
 				"description": "Moves the checker from its current location to the given (x, y).",
+				"altersState": true,
 				"arguments": [
 					{
 						"name": "x",
@@ -71,7 +71,19 @@
 						"type": "int",
 						"description": "The y coordinate to move to."
 					}
-				]
+				],
+				"returns": {
+					"type": "Checker",
+					"description": "Returns the same checker that moved if the move was successful. null otherwise."
+				}
+			},
+			"isMine": {
+				"description": "returns if the checker is owned by your player or not",
+				"altersState": false,
+				"returns": {
+					"type": "boolean",
+					"description": "true if it is yours, false if it is not yours"
+				}
 			}
 		}
 	},
