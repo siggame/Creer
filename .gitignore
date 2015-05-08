@@ -52,3 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# default output directory
+output
+
