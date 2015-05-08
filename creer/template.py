@@ -17,6 +17,9 @@ def build_all(prototype, input, output, clean=False):
     game_objects = prototype['game_objects']
     ai = prototype['ai']
 
+    if not input:
+        input = default_input()
+
     for input_directory in input:
         full_path = os.path.join(input_directory, templates_folder)
         for root, dirnames, filenames in os.walk(full_path):
@@ -28,7 +31,6 @@ def build_all(prototype, input, output, clean=False):
 
                 filepath = os.path.join(root, filename)
                 dirs = list_dirs(filepath)
-                print("DIRS", *dirs)
                 output_path = ""
                 for i, d in enumerate(dirs):
                     if d == templates_folder: # slice it off
@@ -104,3 +106,12 @@ def build_all(prototype, input, output, clean=False):
                         raise Exception(exceptions.text_error_template().render())
 
     return generated_files
+
+
+def default_input():
+    defaulted = []
+    for name in os.listdir(".."):
+        path = "../" + name
+        if os.path.isdir(path) and os.path.isdir(path + "/" + templates_folder):
+            defaulted.append(path)
+    return defaulted
