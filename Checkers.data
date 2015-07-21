@@ -17,8 +17,10 @@
 				"default": 8
 			},
 			"checkers": {
-				"type": "array",
-				"valueType": "Checker",
+				"type": {
+					"name": "list",
+					"valueType": "Checker"
+				},
 				"description": "All the checkers currently in the game."
 			},
 			"checkerMoved": {
@@ -91,8 +93,10 @@
 	"Player": {
 		"attributes": {
 			"checkers": {
-				"type": "array",
-				"valueType": "Checker",
+				"type": {
+					"name": "list",
+					"valueType": "Checker"
+				},
 				"description": "All the checkers currently in the game owned by this player"
 			},
 			"yDirection": {

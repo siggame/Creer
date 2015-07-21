@@ -1,6 +1,7 @@
 import re
 import os
 import collections
+import operator
 
 def extend(d, u):
     for k, v in u.items():
@@ -44,3 +45,12 @@ def copy_dict(source_dict, diffs):
     result=dict(source_dict) # Shallow copy
     result.update(diffs)
     return result
+
+def sort_dict_keys(d):
+    return sorted(d)
+
+def sort_dict_values(d):
+    return sorted(d.items(), key=operator.itemgetter(0))
+
+def upcase_first(s):
+    return s[0].upper() + s[1:]

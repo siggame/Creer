@@ -1,7 +1,7 @@
 from mako.template import Template, exceptions
 from mako.lookup import TemplateLookup
 from time import gmtime, strftime
-from creer.utilities import uncapitalize, camel_case_to_underscore, list_dirs, copy_dict
+from creer.utilities import uncapitalize, camel_case_to_underscore, list_dirs, copy_dict, sort_dict_keys, upcase_first
 import creer.merge as merge
 import creer.githash as githash
 import os
@@ -22,7 +22,7 @@ def build_all(prototype, input, output, do_merge=False):
 
     if not do_merge and not output:
         output = "./output"
-    print("hello there", merge, input, output)
+
     for input_directory in input:
         full_path = os.path.join(input_directory, templates_folder)
         for root, dirnames, filenames in os.walk(full_path):
@@ -63,6 +63,8 @@ def build_all(prototype, input, output, do_merge=False):
                     'ai': ai,
                     'uncapitalize': uncapitalize,
                     'camel_case_to_underscore': camel_case_to_underscore,
+                    'sort_dict_keys': sort_dict_keys,
+                    'upcase_first': upcase_first,
                     'header': template_header,
                     'json': json,
                     'shared': {},

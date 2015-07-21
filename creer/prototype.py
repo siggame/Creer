@@ -1,4 +1,4 @@
-from creer.utilities import extend, copy_dict
+from creer.utilities import extend, copy_dict, sort_dict_keys
 import creer.default as default
 
 def _inherit_into(obj, parent_class, game_objects):
@@ -61,6 +61,15 @@ def build(datas):
 
         for parent_class in obj['parentClasses']:
             _inherit_into(obj, parent_class, game_objects)
+
+    # now all the prototypes should be built, so sort the attribute/function keys
+    for proto_key, proto in prototype.items():
+        if proto_key[0] == '_':
+            continue
+
+        proto['function_names'] = sort_dict_keys(proto['functions'])
+        proto['attribute_names'] = sort_dict_keys(proto['attributes'])
+    ai['function_names'] = sort_dict_keys(ai['functions'])
 
     return {
         'game_objects': game_objects,

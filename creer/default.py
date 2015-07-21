@@ -1,24 +1,30 @@
-def default_type(obj, key):
-    if not 'type' in obj:
-        raise Exception("no type to default for " + key)
+def default_type(obj, type_key='type', parent_name='"no parent name"'):
+    if not type_key in obj:
+        raise Exception("no type to default for " + parent_name)
 
-    if obj['type'] == "array" or obj['type'] == "dictionary":
-        if not 'valueType' in obj:
-            raise Exception("no valueType for " + key)
-    else:
-        obj['valueType'] = None
+    if isinstance(obj[type_key], str): # transform it to a dict
+        obj[type_key] = { 'name': obj[type_key] }
 
-    if obj['type'] == "dictionary":
-        if not 'keyType' in obj:
-            raise Exception("no keyType for " + key)
-    else:
-        obj['keyType'] = None
+    this_type = obj[type_key]
 
-    if obj['type'] == "dictionary" and obj['type'] == "array":
-        if not 'valueType' in obj:
-            raise Exception("no valueType for " + key)
+    if not 'name' in this_type:
+        raise Exception("no name for type in " + parent_name)
+
+    if this_type['name'] == "list" or this_type['name'] == "dictionary":
+        if not 'valueType' in this_type:
+            raise Exception("no valueType for " + parent_name)
+        else:
+            default_type(this_type, 'valueType', parent_name)
     else:
-        obj['valueType'] = None
+        this_type['valueType'] = None
+
+    if this_type['name'] == "dictionary":
+        if not 'keyType' in this_type:
+            raise Exception("no keyType for " + parent_name)
+        else:
+            default_type(this_type, 'keyType', parent_name)
+    else:
+        this_type['keyType'] = None
 
 def game_obj(obj, key):
     if not 'description' in obj:
@@ -37,7 +43,7 @@ def game_obj(obj, key):
         obj['attributes'] = {}
 
     for attribute_key, attribute_parms in obj['attributes'].items():
-        default_type(attribute_parms, "'{0}'s attribute '{1}'.".format(key, attribute_key))
+        default_type(attribute_parms, 'type', "'{0}'s attribute '{1}'.".format(key, attribute_key))
         if not 'description' in attribute_parms:
             raise Exception("no 'description' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
         if not 'default' in attribute_parms:
@@ -59,7 +65,7 @@ def functions_for(obj, key):
         for i, arg_parms in enumerate(function_parms['arguments']):
             if not 'name' in arg_parms:
                 raise Exception("no 'name' in obj '{0}'s function '{1}'s parameter at index {2}".format(key, function_key, i))
-            default_type(arg_parms, "'{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
+            default_type(arg_parms, 'type', "'{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
             if not 'description' in arg_parms:
                 raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
             if not 'default' in arg_parms:
@@ -68,7 +74,7 @@ def functions_for(obj, key):
         function_parms['argument_names'] = argument_names
 
         if 'returns' in function_parms:
-            default_type(function_parms['returns'], "obj '{0}'s function '{1}'s return".format(key, function_key))
+            default_type(function_parms['returns'], 'type', "obj '{0}'s function '{1}'s return".format(key, function_key))
             if not 'description' in function_parms['returns']:
                 raise Exception("no 'description' in obj '{0}'s function '{1}'s return".format(key, function_key))
             if not 'default' in function_parms['returns']:
