@@ -1,7 +1,7 @@
 from mako.template import Template, exceptions
 from mako.lookup import TemplateLookup
 from time import gmtime, strftime
-from creer.utilities import uncapitalize, camel_case_to_underscore, list_dirs, copy_dict, sort_dict_keys, upcase_first
+from creer.utilities import uncapitalize, camel_case_to_underscore, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
 import creer.merge as merge
 import creer.githash as githash
 import os
@@ -65,6 +65,8 @@ def build_all(prototype, input, output, do_merge=False):
                     'camel_case_to_underscore': camel_case_to_underscore,
                     'sort_dict_keys': sort_dict_keys,
                     'upcase_first': upcase_first,
+                    'lowercase_first': lowercase_first,
+                    'is_primitive_type': is_primitive_type,
                     'header': template_header,
                     'json': json,
                     'shared': {},

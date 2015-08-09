@@ -59,6 +59,9 @@ def functions_for(obj, key):
         if not 'description' in function_parms:
             raise Exception("no 'description' in obj '{0}'s function '{1}'".format(key, function_key))
 
+        if not 'serverPredefined' in function_parms:
+            function_parms['serverPredefined'] = False
+
         if not 'arguments' in function_parms:
             function_parms['arguments'] = []
         argument_names = []

@@ -54,3 +54,9 @@ def sort_dict_values(d):
 
 def upcase_first(s):
     return s[0].upper() + s[1:]
+
+def lowercase_first(s):
+    return s[0].lower() + s[1:]
+
+def is_primitive_type(type_obj):
+    return (type_obj['name'] in ['null', 'boolean', 'int', 'float', 'string', 'list', 'dictionary'])

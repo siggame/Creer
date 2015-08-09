@@ -24,6 +24,11 @@
 				},
 				"description": "List of all the players in the game.",
 				"serverPredefined": true
+			},
+			"session": {
+				"type": "string",
+				"description": "A unique identifier for the game instance that is being played.",
+				"serverPredefined": true
 			}
 		}
 	},
@@ -35,6 +40,11 @@
 			"id": {
 				"type": "string",
 				"description": "A unique id for each instance of a GameObject or a sub class. Used for client and server communication. Should never change value after being set.",
+				"serverPredefined": true
+			},
+			"gameObjectName": {
+				"type": "string",
+				"description": "String representing the top level Class that this game object is an instance of. Used for reflection to create new instances on clients, but exposed for convenience should AIs want this data.",
 				"serverPredefined": true
 			},
 			"logs": {

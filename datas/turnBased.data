@@ -7,7 +7,8 @@
 					"type": "boolean",
 					"description": "represents if you want to end your turn. true means end the turn, false means to keep your turn going and re-call runTurn()",
 					"default": true
-				}
+				},
+				"serverPredefined": true
 			}
 		}
 	},
