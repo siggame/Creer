@@ -65,14 +65,25 @@ def functions_for(obj, key):
         if not 'arguments' in function_parms:
             function_parms['arguments'] = []
         argument_names = []
+        must_be_optional = False
         for i, arg_parms in enumerate(function_parms['arguments']):
             if not 'name' in arg_parms:
                 raise Exception("no 'name' in obj '{0}'s function '{1}'s parameter at index {2}".format(key, function_key, i))
             default_type(arg_parms, 'type', "'{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
             if not 'description' in arg_parms:
-                raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms.name))
+                raise Exception("no 'description' in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
             if not 'default' in arg_parms:
+                if must_be_optional:
+                    raise Exception("all args must be optional from this point in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
                 arg_parms['default'] = None
+                arg_parms['optional'] = False
+            else: # they defined a default value, so this argument is optional
+                arg_parms['optional'] = True
+                if not 'optionals_start_index' in function_parms:
+                    function_parms['optionals_start_index'] = i
+                    function_parms['optionals'] = 0
+                function_parms['optionals'] += 1
+                must_be_optional = True
             argument_names.append(arg_parms['name'])
         function_parms['argument_names'] = argument_names
 
