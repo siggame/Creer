@@ -5,15 +5,50 @@ The automatic code generating script for the Cadre framework, intending to creat
 
 All inspiration taken from [MST's SIG-GAME framework](https://github.com/siggame), and most of the terminology is assuming some familiarity with it as this is a spiritual successor to it.
 
+## Requirements
+[Mako](http://www.makotemplates.org/) and [Python](https://www.python.org/) 3.4.3+ are the only requirements.
+
+To install Make, using `pip` is probably your best bet.
+
+`pip install mako`
+
 ## How to use
-`python main.py -m {main.data file} -i {../list/of/folders ./that/have/a/_templates/folder/ in/them} -o {path/to/output/folder}`
+`python main.py -g {main.data file} -i {../list/of/folders ./that/have/a/_templates/folder/ in/them} -o {path/to/output/folder}`
+
+### Merging
+One of the biggest pains with the old codegen was manually merging code between codegen runs. Creer is smart and can do the merging for you! Just add the `--merge` tag and target the Cadre repo you want to merge as the input and output, and it will automatically merge your code changes via code introspection.
 
 ## Templates
 Every folder in the `-i` input folders should have a `_templates/` folder present inside it. the folder/file names inside it should be using Mako syntax. if the file contains `${obj_key}` then every game class within the game data you are evaluating for will be generated. For examples look at the Cerveau and Joeur clients that are part of the Cadre framework.
 
+The syntax is all [Mako](http://www.makotemplates.org/), to give you the full power of Python when templating your Cadre projects.
+
+## Game Structure
+Games are defined by a data file that describes the Game, GameObjects within it, and the AI competitors code, and the entire structure is incredibly flexible.
+
+### Data File
+Each main data file should describe your game structure, and can inherit from other data files to keep games DRY.
+
+### Types
+All variables are cross language safe and can be any type of:
+* `void`: No type (null)
+* `int`: Integer
+* `float`: Floating Point Number
+* `string`: Text
+* `boolean`: True or False
+* `GameObject`: An instance of a game object class defined in the data file. Considered "primitive" to clients to support cool things like cycles.
+* `list<valueType>`: An ordered container of another game object. Can be multi-dimensional (e.g. a list of lists of ints)
+* `dictionary<keyType, valueType>`: A mapping of keys to values, and just as lists can be multi-dimensional.
+
+Obviously different languages support these "primitives" in different ways, but all Creer compabible projects should use the fastest, most popular and easy to understand implimentation (e.g. use standard libraries and practices).
+
+With support for basically all the primitives, and more complex containers and classes *any* game structure should be possible. Supporting more complex ideas such as cycles (e.g. a GameObject having reference to itself), and multi-dimensional containers prevents "hacks" that other games using older frameworks needs such as "UnitTypes" classes which held static variables on "Unit" classes.
+
+### Functions
+All functions, both as part of GameObjects and the AI classes can take any number of arguements of any of the above types (with optional args), and returns any type. AI returns are sent back to the server and GameObject returns are purely server side with the result "returned" over the TCP socket connection to clients.
+
+### Documenation
+Every class, attribute, function, argument, etc **must** be documented. If you fail to provide a description in your data somewhere Creer will tell you. This is so heavily enforced because Creer writes code that other developers and competitors need to understand quickly, so propery and robust documentation is key.
+
 ## Other notes
 Try to have git installed via your command line `git` so the version of this repo can be added to the generated files. This will help in tracking if files were updated when pushed.
-
-## Other notes
-
-This is a polished proof-of-concept part of the Cadre framework. There are plently of bugs and issues present. The purpose at this time is not to be perfect, but to show that this framework is robust and meets all the needs of MST's ACM SIG-GAME.

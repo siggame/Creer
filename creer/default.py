@@ -62,6 +62,9 @@ def functions_for(obj, key):
         if not 'serverPredefined' in function_parms:
             function_parms['serverPredefined'] = False
 
+        if not 'altersState' in function_parms: # assume all functions alter the game state, unless explicity set in the data
+            function_parms['altersState'] = True
+
         if not 'arguments' in function_parms:
             function_parms['arguments'] = []
         argument_names = []
