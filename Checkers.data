@@ -26,12 +26,12 @@
             "checkerMoved": {
                 "type": "Checker",
                 "description": "The checker that last moved and must be moved because only one checker can move during each players turn.",
-                "arenaInterest": "sum"
+                "k-means": "sum"
             },
             "checkerMovedJumped": {
                 "type": "boolean",
                 "description": "If the last checker that moved jumped, meaning it can move again.",
-                "arenaInterest": "sum"
+                "k-means": "sum"
             }
         }
     },
@@ -55,7 +55,7 @@
                 "type": "boolean",
                 "description": "If the checker has been kinged and can move backwards.",
                 "default": false,
-                "arenaInterest": "sum"
+                "k-means": "sum"
             }
         },
         "functions": {

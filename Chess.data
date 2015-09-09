@@ -80,8 +80,8 @@
                     }
                 ],
                 "returns": {
-                    "type": "Piece",
-                    "description": "Returns the same piece that moved if the move was successful. null otherwise."
+                    "type": "Move",
+                    "description": "Returns the Move with data about the move if successful. null otherwise."
                 }
             }
         }

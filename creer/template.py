@@ -60,6 +60,7 @@ def build_all(prototype, input, output, do_merge=False):
                     'game': game,
                     'game_name': game_name,
                     'game_objs': game_objects,
+                    'game_obj_names': sort_dict_keys(game_objects),
                     'ai': ai,
                     'uncapitalize': uncapitalize,
                     'camel_case_to_underscore': camel_case_to_underscore, # depreciated

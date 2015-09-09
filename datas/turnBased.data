@@ -1,38 +1,38 @@
 {
-	"AI": {
-		"functions": {
-			"runTurn": {
-				"description": "This is called every time the AI is asked to respond with a command during their turn",
-				"returns": {
-					"type": "boolean",
-					"description": "represents if you want to end your turn. true means end the turn, false means to keep your turn going and re-call runTurn()",
-					"default": true
-				},
-				"serverPredefined": true
-			}
-		}
-	},
+    "AI": {
+        "functions": {
+            "runTurn": {
+                "description": "This is called every time the AI is asked to respond with a command during their turn",
+                "returns": {
+                    "type": "boolean",
+                    "description": "represents if you want to end your turn. true means end the turn, false means to keep your turn going and re-call runTurn()",
+                    "default": true
+                },
+                "serverPredefined": true
+            }
+        }
+    },
 
-	"Game": {
-		"serverParentClasses": ["TurnBasedGame"],
-		"attributes": {
-			"currentPlayer": {
-				"type": "Player",
-				"description": "The player whose turn it is currently. That player can send commands. Other players cannot.",
-				"serverPredefined": true
-			},
-			"currentTurn": {
-				"type": "int",
-				"description": "The current turn number, starting at 0 for the first player's turn",
-				"default": 0,
-				"serverPredefined": true
-			},
-			"maxTurns": {
-				"type": "int",
-				"description": "The maximum number of turns before the game will automatically end.",
-				"default": 100,
-				"serverPredefined": true
-			}
-		}
-	}
+    "Game": {
+        "serverParentClasses": ["TurnBasedGame"],
+        "attributes": {
+            "currentPlayer": {
+                "type": "Player",
+                "description": "The player whose turn it is currently. That player can send commands. Other players cannot.",
+                "serverPredefined": true
+            },
+            "currentTurn": {
+                "type": "int",
+                "description": "The current turn number, starting at 0 for the first player's turn",
+                "default": 0,
+                "serverPredefined": true
+            },
+            "maxTurns": {
+                "type": "int",
+                "description": "The maximum number of turns before the game will automatically end.",
+                "default": 100,
+                "serverPredefined": true
+            }
+        }
+    }
 }
