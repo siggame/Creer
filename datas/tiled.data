@@ -1,0 +1,64 @@
+{
+    "Game": {
+        "serverParentClasses": ["TiledGame"],
+        "mapWidth": {
+            "type": "int",
+            "description": "The number of Tiles that comprise the map along the X (horizontal) axis."
+        },
+        "mapHeight": {
+            "type": "int",
+            "description": "The number of Tiles that comprise the map along the Y (vertical) axis."
+        },
+        "tiles": {
+            "type": {
+                "name": "list",
+                "valueType": "Tile"
+            },
+            "description": "All the tiles that comprise the map, stored in Column-major order."
+        }
+    },
+
+    "Tile": {
+        "description": "A Tile in the game that makes up the 2D map gird",
+        "attributes": {
+            "x": {
+                "type": "int",
+                "description": "The x (horizontal) position of this Tile."
+            },
+            "y": {
+                "type": "int",
+                "description": "The y (vertical) position of this Tile."
+            },
+            "mappable": {
+                "type": "Mappable",
+                "description": "The mappable that is currently on this tile, or null if this tile is empty"
+            },
+            "tileAbove": {
+                "type": "Tile",
+                "description": "The Tile above this one (x, y-1), null if off map."
+            },
+            "tileRight": {
+                "type": "Tile",
+                "description": "The Tile to the right of this one (x+1, y), null if off map."
+            },
+            "tileBelow": {
+                "type": "Tile",
+                "description": "The Tile below this one (x, y+1), null if off map."
+            },
+            "tileLeft": {
+                "type": "Tile",
+                "description": "The Tile to the left of this one (x-1, y), null if off map."
+            }
+        }
+    },
+
+    "Mappable": {
+        "description": "The base class for any game object that can be on a Tile, and thus on the map.",
+        "attributes": {
+            "location": {
+                "type": "Tile",
+                "description": "The Tile this object is currently on."
+            }
+        }
+    }
+}

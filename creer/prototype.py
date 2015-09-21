@@ -27,11 +27,25 @@ def build(datas):
         for new_parent_key in parent_data['_parentDatas']:
             parent_keys.append(new_parent_key)
 
-    parent_datas.append(datas['base']) # all games get this base data
+    parent_datas.append(datas['base']) # all games get the base data
 
+    # merge all the prototypes inherited into one prototype
     prototype = {}
-    while len(parent_datas) > 0:
-        extend(prototype, parent_datas.pop())
+    for parent_data in reversed(parent_datas):
+        extend(prototype, parent_data)
+
+    # extend won't do this correctly. multiple data may pre-define parent classes and will get overwritten via extend. this appends each additional class name
+    for proto_key, proto in prototype.items():
+        if proto_key[0] == "_":
+            continue
+
+        newServerParentClasses = []
+        if 'serverParentClasses' in proto:
+            for parent_data in reversed(parent_datas):
+                if proto_key in parent_data and 'serverParentClasses' in parent_data[proto_key]:
+                    for parent_class_name in parent_data[proto_key]['serverParentClasses']:
+                        newServerParentClasses.append(parent_class_name)
+        proto['serverParentClasses'] = newServerParentClasses
 
     game_objects = {}
     game = prototype['Game']
@@ -47,6 +61,9 @@ def build(datas):
     for obj_key, obj in prototype.items():
         if obj_key == "Game" or obj_key[0] == "_":
             continue
+
+        if obj_key == "GameObject" and len(obj['serverParentClasses']) == 0:
+            obj['serverParentClasses'] = [ 'BaseGameObject' ]
 
         default.game_obj(obj, obj_key)
 

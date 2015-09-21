@@ -34,7 +34,6 @@
     },
 
     "GameObject": {
-        "serverParentClasses": ["BaseGameObject"],
         "description": "An object in the game. The most basic class that all game classes should inherit from automatically.",
         "attributes": {
             "id": {
