@@ -12,7 +12,7 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
 
     if this_type['name'] == "list" or this_type['name'] == "dictionary":
         if not 'valueType' in this_type:
-            raise Exception("no valueType for " + parent_name)
+            raise Exception("no 'valueType' for nested type " + parent_name)
         else:
             default_type(this_type, 'valueType', parent_name)
     else:

@@ -49,6 +49,8 @@ def build(datas):
 
     game_objects = {}
     game = prototype['Game']
+    if not 'name' in game:
+        raise Exception("Error: no name given for the main game data. Name your Game!!!")
     default.game_obj(game, "Game")
 
     ai = prototype['AI']
