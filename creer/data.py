@@ -5,7 +5,7 @@ import fnmatch
 def _parse_data(datas, key, path):
     try:
         f = open(path)
-        print("--PARSING", path)
+        print("-- PARSING", path)
         data = json.load(f)
         f.close()
     except ValueError as e:
@@ -16,6 +16,13 @@ def _parse_data(datas, key, path):
 
 def parse(main_path):
     datas = {}
+    if not os.path.isfile(main_path):
+        generic_path = "../Jeux/" + main_path + "/main.data"
+        if os.path.isfile(generic_path):
+            main_path = generic_path
+        else:
+            raise Exception("main.data path not valid as generic path or actual path.")
+
     _parse_data(datas, "main", main_path)
 
     extension = ".data"
