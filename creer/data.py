@@ -17,7 +17,7 @@ def _parse_data(datas, key, path):
 def parse(main_path):
     datas = {}
     if not os.path.isfile(main_path):
-        generic_path = "../Jeux/" + main_path + "/main.data"
+        generic_path = "../Jeux/" + main_path + "/creer.data"
         if os.path.isfile(generic_path):
             main_path = generic_path
         else:
