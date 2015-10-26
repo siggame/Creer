@@ -1,0 +1,15 @@
+{
+    "Game": {
+        "numberOfPlayers": 2,
+        "serverParentClasses": [ "TwoPlayerGame" ]
+    },
+
+    "Player": {
+        "attributes": {
+            "otherPlayer": {
+                "type": "Player",
+                "description": "this player's opponent in the game."
+            }
+        }
+    }
+}
