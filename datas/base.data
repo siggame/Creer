@@ -57,7 +57,7 @@
         },
         "functions": {
             "log": {
-                "description": "adds a message to this game object's log. Intended for debugging purposes.",
+                "description": "Adds a message to this GameObject's logs. Intended for your own debugging purposes, as strings stored here are saved in the gamelog.",
                 "serverPredefined": true,
                 "altersState": true,
                 "arguments": [
@@ -85,21 +85,21 @@
             },
             "won": {
                 "type": "boolean",
-                "description": "if the player won the game or not",
+                "description": "If the player won the game or not.",
                 "default": false
             },
             "lost": {
                 "type": "boolean",
-                "description": "if the player lost the game or not",
+                "description": "If the player lost the game or not.",
                 "default": false
             },
             "reasonWon": {
                 "type": "string",
-                "description": "the reason why the player won the game"
+                "description": "The reason why the player won the game."
             },
             "reasonLost": {
                 "type": "string",
-                "description": "the reason why the player lost the game"
+                "description": "The reason why the player lost the game."
             },
             "timeRemaining": {
                 "type": "float",
