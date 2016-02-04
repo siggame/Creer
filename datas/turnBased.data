@@ -2,10 +2,10 @@
     "AI": {
         "functions": {
             "runTurn": {
-                "description": "This is called every time the AI is asked to respond with a command during their turn",
+                "description": "This is called every time it is this AI.player's turn.",
                 "returns": {
                     "type": "boolean",
-                    "description": "Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call runTurn().",
+                    "description": "Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call this function.",
                     "default": true
                 },
                 "serverPredefined": true
@@ -23,7 +23,7 @@
             },
             "currentTurn": {
                 "type": "int",
-                "description": "The current turn number, starting at 0 for the first player's turn",
+                "description": "The current turn number, starting at 0 for the first player's turn.",
                 "default": 0,
                 "serverPredefined": true
             },

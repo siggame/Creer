@@ -88,6 +88,8 @@ def build(datas):
 
         proto['function_names'] = sort_dict_keys(proto['functions'])
         proto['attribute_names'] = sort_dict_keys(proto['attributes'])
+        proto['inheritedFunction_names'] = sort_dict_keys(proto['inheritedFunctions'])
+        proto['inheritedAttribute_names'] = sort_dict_keys(proto['inheritedAttributes'])
     ai['function_names'] = sort_dict_keys(ai['functions'])
 
     return {
