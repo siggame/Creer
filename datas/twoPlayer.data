@@ -8,7 +8,7 @@
         "attributes": {
             "otherPlayer": {
                 "type": "Player",
-                "description": "this player's opponent in the game."
+                "description": "This player's opponent in the game."
             }
         }
     }

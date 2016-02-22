@@ -1,5 +1,6 @@
 from creer.utilities import extend, copy_dict, sort_dict_keys
 import creer.default as default
+import creer.validate
 
 def _inherit_into(obj, parent_class, game_objects):
     parent = game_objects[parent_class]
@@ -91,6 +92,8 @@ def build(datas):
         proto['inheritedFunction_names'] = sort_dict_keys(proto['inheritedFunctions'])
         proto['inheritedAttribute_names'] = sort_dict_keys(proto['inheritedAttributes'])
     ai['function_names'] = sort_dict_keys(ai['functions'])
+
+    creer.validate.validate(prototype)
 
     return {
         'game_objects': game_objects,
