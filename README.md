@@ -13,7 +13,7 @@ To install Make, using `pip` is probably your best bet.
 `pip install mako`
 
 ## How to use
-`python main.py -g {main.data file} -i {../list/of/folders ./that/have/a/_templates/folder/ in/them} -o {path/to/output/folder}`
+`python main.py {main.data file} -i {../list/of/folders ./that/have/a/_templates/folder/ in/them} -o {path/to/output/folder}`
 
 ### Merging
 One of the biggest pains with the old codegen was manually merging code between codegen runs. Creer is smart and can do the merging for you! Just add the `--merge` tag and target the Cadre repo you want to merge as the input and output, and it will automatically merge your code changes via code introspection.
