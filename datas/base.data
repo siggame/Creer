@@ -51,7 +51,7 @@
                     "name": "list",
                     "valueType": "string"
                 },
-                "description": "Any strings logged will be stored here when this game object logs the strings. Intended for debugging.",
+                "description": "Any strings logged will be stored here. Intended for debugging.",
                 "serverPredefined": true
             }
         },
