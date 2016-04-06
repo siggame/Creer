@@ -1,13 +1,19 @@
-import creer.data as data
-import creer.prototype as prototype
-import creer.template as template
-import creer.writer as writer
+import creer.data
+import creer.prototype
+import creer.template
+import creer.writer
+import creer.input
 
-def run(main, input, output, merge=False, tagless=False):
-    datas = data.parse(main)
+def run(game, inputs, output, merge=False, tagless=False, no_write=False):
+    datas = creer.data.parse(game)
 
-    proto = prototype.build(datas)
+    proto = creer.prototype.build(datas)
 
-    generated_files = template.build_all(proto, input, output, merge, tagless)
+    inputs = creer.input.validate(inputs)
 
-    writer.write(generated_files)
+    generated_files = creer.template.build_all(proto, inputs, output, merge, tagless)
+
+    if not no_write:
+        creer.writer.write(generated_files)
+    else:
+        print("Creer Success! Not writing any files.")
