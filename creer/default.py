@@ -10,6 +10,8 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
     if not 'name' in this_type:
         raise Exception("no name for type in " + parent_name)
 
+    this_type['is_game_object'] = this_type['name'][0].isupper() # primitives are always lower case, GameObjects are upper
+
     if this_type['name'] == "list" or this_type['name'] == "dictionary":
         if not 'valueType' in this_type:
             raise Exception("no 'valueType' for nested type " + parent_name)
