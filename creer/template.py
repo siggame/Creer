@@ -24,7 +24,6 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
         output = "../" if do_merge else "./output"
 
     for input_directory in inputs:
-        print("i_d", input_directory)
         full_path = os.path.join(input_directory, templates_folder)
         for root, dirnames, filenames in os.walk(full_path):
             for filename in filenames:
