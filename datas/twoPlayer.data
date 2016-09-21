@@ -6,7 +6,7 @@
 
     "Player": {
         "attributes": {
-            "otherPlayer": {
+            "opponent": {
                 "type": "Player",
                 "description": "This player's opponent in the game."
             }
