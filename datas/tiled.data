@@ -3,23 +3,23 @@
         "serverParentClasses": ["TiledGame"],
         "mapWidth": {
             "type": "int",
-            "description": "The number of Tiles that comprise the map along the X (horizontal) axis."
+            "description": "The number of Tiles in the map along the x (horizontal) axis."
         },
         "mapHeight": {
             "type": "int",
-            "description": "The number of Tiles that comprise the map along the Y (vertical) axis."
+            "description": "The number of Tiles in the map along the y (vertical) axis."
         },
         "tiles": {
             "type": {
                 "name": "list",
                 "valueType": "Tile"
             },
-            "description": "All the tiles that comprise the map, stored in Column-major order."
+            "description": "All the tiles in the map, stored in Row-major order. Use `x + y * mapWidth` to access the correct index."
         }
     },
 
     "Tile": {
-        "description": "A Tile in the game that makes up the 2D map gird",
+        "description": "A Tile in the game that makes up the 2D map grid.",
         "attributes": {
             "x": {
                 "type": "int",
@@ -29,35 +29,21 @@
                 "type": "int",
                 "description": "The y (vertical) position of this Tile."
             },
-            "mappable": {
-                "type": "Mappable",
-                "description": "The mappable that is currently on this tile, or null if this tile is empty"
-            },
             "tileAbove": {
                 "type": "Tile",
-                "description": "The Tile above this one (x, y-1), null if off map."
+                "description": "The Tile above this one (x, y-1). Null if out of bounds of the map."
             },
             "tileRight": {
                 "type": "Tile",
-                "description": "The Tile to the right of this one (x+1, y), null if off map."
+                "description": "The Tile to the right of this one (x+1, y). Null if out of bounds of the map."
             },
             "tileBelow": {
                 "type": "Tile",
-                "description": "The Tile below this one (x, y+1), null if off map."
+                "description": "The Tile below this one (x, y+1). Null if out of bounds of the map."
             },
             "tileLeft": {
                 "type": "Tile",
-                "description": "The Tile to the left of this one (x-1, y), null if off map."
-            }
-        }
-    },
-
-    "Mappable": {
-        "description": "The base class for any game object that can be on a Tile, and thus on the map.",
-        "attributes": {
-            "location": {
-                "type": "Tile",
-                "description": "The Tile this object is currently on."
+                "description": "The Tile to the left of this one (x-1, y). Null if out of bounds of the map."
             }
         }
     }
