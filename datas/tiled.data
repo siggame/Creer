@@ -1,20 +1,22 @@
 {
     "Game": {
         "serverParentClasses": ["TiledGame"],
-        "mapWidth": {
-            "type": "int",
-            "description": "The number of Tiles in the map along the x (horizontal) axis."
-        },
-        "mapHeight": {
-            "type": "int",
-            "description": "The number of Tiles in the map along the y (vertical) axis."
-        },
-        "tiles": {
-            "type": {
-                "name": "list",
-                "valueType": "Tile"
+        "attributes": {
+            "mapWidth": {
+                "type": "int",
+                "description": "The number of Tiles in the map along the x (horizontal) axis."
             },
-            "description": "All the tiles in the map, stored in Row-major order. Use `x + y * mapWidth` to access the correct index."
+            "mapHeight": {
+                "type": "int",
+                "description": "The number of Tiles in the map along the y (vertical) axis."
+            },
+            "tiles": {
+                "type": {
+                    "name": "list",
+                    "valueType": "Tile"
+                },
+                "description": "All the tiles in the map, stored in Row-major order. Use `x + y * mapWidth` to access the correct index."
+            }
         }
     },
 
