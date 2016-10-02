@@ -21,6 +21,7 @@
     },
 
     "Tile": {
+        "serverParentClasses": ["TiledTile"],
         "description": "A Tile in the game that makes up the 2D map grid.",
         "attributes": {
             "x": {

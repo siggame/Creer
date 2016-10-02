@@ -70,7 +70,7 @@ def build(datas):
 
         default.game_obj(obj, obj_key)
 
-        if len(obj['parentClasses']) == 0 and len(obj['serverParentClasses']) == 0:
+        if obj_key != "GameObject" and len(obj['parentClasses']) == 0:
             obj['parentClasses'].append("GameObject")
 
         game_objects[obj_key] = obj
