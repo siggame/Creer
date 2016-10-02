@@ -31,21 +31,21 @@
                 "type": "int",
                 "description": "The y (vertical) position of this Tile."
             },
-            "tileAbove": {
+            "tileNorth": {
                 "type": "Tile",
-                "description": "The Tile above this one (x, y-1). Null if out of bounds of the map."
+                "description": "The Tile to the 'North' of this one (x, y-1). Null if out of bounds of the map."
             },
-            "tileRight": {
+            "tileEast": {
                 "type": "Tile",
-                "description": "The Tile to the right of this one (x+1, y). Null if out of bounds of the map."
+                "description": "The Tile to the 'East' of this one (x+1, y). Null if out of bounds of the map."
             },
-            "tileBelow": {
+            "tileSouth": {
                 "type": "Tile",
-                "description": "The Tile below this one (x, y+1). Null if out of bounds of the map."
+                "description": "The Tile to the 'South' of this one (x, y+1). Null if out of bounds of the map."
             },
-            "tileLeft": {
+            "tileWest": {
                 "type": "Tile",
-                "description": "The Tile to the left of this one (x-1, y). Null if out of bounds of the map."
+                "description": "The Tile to the 'West' of this one (x-1, y). Null if out of bounds of the map."
             }
         }
     }
