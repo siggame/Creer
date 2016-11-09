@@ -13,7 +13,7 @@ def with_data(data, pre_comment, key, alt, add_tags):
         print("    + merging", key)
         merged.append(data[key])
     else:
-        if alt[len(alt) - 1] != "\n":
+        if alt[len(alt) - 1] != "\n" and add_tags:
             alt = alt + "\n"
         merged.append(alt)
     if add_tags:
