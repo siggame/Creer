@@ -5,10 +5,13 @@ MERGE_KEYWORD_START_POST = " -->>"
 MERGE_KEYWORD_END_PRE = "<<-- /Creer-Merge: "
 MERGE_KEYWORD_END_POST = " -->>"
 
-def with_data(data, pre_comment, key, alt, add_tags):
+def with_data(data, pre_comment, key, alt, add_tags=True, optional=False):
     merged = []
+    # begin merge comment tag
     if add_tags:
         merged.extend([pre_comment, MERGE_KEYWORD_START_PRE, key, MERGE_KEYWORD_START_POST," - Code you add between this comment and the end comment will be preserved between Creer re-runs.\n"])
+
+    # merged content
     if key in data:
         print("    + merging", key)
         merged.append(data[key])
@@ -16,6 +19,12 @@ def with_data(data, pre_comment, key, alt, add_tags):
         if alt[len(alt) - 1] != "\n" and add_tags:
             alt = alt + "\n"
         merged.append(alt)
+
+    if not add_tags and optional and (merged[-1] == alt or merged[-1] == alt + "\n"):
+        # then don't bother with this merge tag
+        return ""
+
+    # end merge comment tag
     if add_tags:
         merged.extend([pre_comment, MERGE_KEYWORD_END_PRE, key, MERGE_KEYWORD_END_POST])
     return "".join(merged)

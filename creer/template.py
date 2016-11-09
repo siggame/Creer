@@ -102,11 +102,13 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
 
                         print("  -> generating", system_path)
 
-                        def this_merge(pre_comment, key, alt):
-                            return merge.with_data(merge_data, pre_comment, key, alt, not tagless)
+                        def this_merge(pre_comment, key, alt, optional=False):
+                            return merge.with_data(merge_data, pre_comment, key, alt,
+                                optional=optional,
+                                add_tags=(not tagless)
+                            )
                         p['merge'] = this_merge
 
-                        
                         generated_files.append({
                             'contents': filecontents_template.render(**p),
                             'path': system_path,
