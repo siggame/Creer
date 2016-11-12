@@ -110,8 +110,9 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                         p['merge'] = this_merge
 
                         contents = filecontents_template.render(**p)
+                        endl = "\r\n" if "\r\n" in contents else "\n"
                         generated_files.append({
-                            'contents': contents.rstrip() + "\r\n" if "\r\n" in contents else "\n",
+                            'contents': contents.rstrip() + endl,
                             'path': system_path,
                         })
                     except:
