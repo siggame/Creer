@@ -17,11 +17,11 @@ def _parse_data(datas, key, path):
 def parse(main_path):
     datas = {}
     if not os.path.isfile(main_path):
-        generic_path = "../Jeux/" + main_path + "/creer.data"
+        generic_path = "../Games/" + main_path + "/creer.data"
         if os.path.isfile(generic_path):
             main_path = generic_path
         else:
-            raise Exception("main.data path not valid as generic path or actual path.")
+            raise Exception("main.data path ("+ main_path + ") not valid as generic path or actual path.")
 
     _parse_data(datas, "main", main_path)
 
