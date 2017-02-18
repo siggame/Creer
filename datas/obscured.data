@@ -1,9 +1,0 @@
-{
-    "Game": {
-        "serverParentClasses": ["ObscuredGame"]
-    },
-
-    "GameObject": {
-        "serverParentClasses": ["ObscuredGameObject"]
-    }
-}

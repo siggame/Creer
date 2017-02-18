@@ -1,0 +1,12 @@
+# Simple helper variables for a two player game
+
+Game:
+  numberOfPlayers: 2
+  serverParentClasses:
+  - TwoPlayerGame
+
+Player:
+  attributes:
+    opponent:
+      type: Player
+      description: This player's opponent in the game.

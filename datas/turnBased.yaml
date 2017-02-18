@@ -1,0 +1,30 @@
+# Turn based games, which probably ever game will be
+
+AI:
+  functions:
+    runTurn:
+      description: This is called every time it is this AI.player's turn.
+      serverPredefined: true
+      returns:
+        type: boolean
+        description: Represents if you want to end your turn. True means end your turn, False means to keep your turn going and re-call this function.
+        default: true
+
+Game:
+  serverParentClasses:
+  - TurnBasedGame
+  attributes:
+    currentPlayer:
+      type: Player
+      description: The player whose turn it is currently. That player can send commands. Other players cannot.
+      serverPredefined: true
+    currentTurn:
+      type: int
+      description: The current turn number, starting at 0 for the first player's turn.
+      serverPredefined: true
+      default: 0
+    maxTurns:
+      type: int
+      description: The maximum number of turns before the game will automatically end.
+      serverPredefined: true
+      default: 100

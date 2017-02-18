@@ -1,0 +1,10 @@
+# This is only for the game server, the clients don't care that a game is
+# obscured to them, so they don't need any extra variables (at a base level)
+
+Game:
+  serverParentClasses:
+  - ObscuredGame
+
+GameObject:
+  serverParentClasses:
+  - ObscuredGameObject
