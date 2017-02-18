@@ -7,8 +7,13 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
 
     this_type = obj[type_key]
 
-    if not 'name' in this_type:
+    if 'name' not in this_type:
         raise Exception("no name for type in " + parent_name)
+
+    # if this is a shorthand list, e.g. GameObject[], format it
+    if this_type['name'].endswith('[]'):
+        this_type['valueType'] = this_type['name'][0:-2]  # cut off the '[]'
+        this_type['name'] = 'list'
 
     this_type['is_game_object'] = this_type['name'][0].isupper() # primitives are always lower case, GameObjects are upper
 
