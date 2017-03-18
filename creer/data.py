@@ -2,12 +2,14 @@ import os
 import json
 import yaml
 import fnmatch
+import creer
 
 _parser = {
     'json': json,
     'data': json,
     'yaml': yaml
 }
+
 
 def _parse_data(datas, key, path):
     filename, ext = os.path.splitext(path)
@@ -28,7 +30,7 @@ def parse(main_path):
     found = os.path.isfile(main_path)
     if not found:
         for extension in _parser.keys():
-            generic_path = '../Games/{}/creer.{}'.format(main_path, extension)
+            generic_path = os.path.join(creer.GAMES_DIR, main_path, 'creer.' + extension)
             found = os.path.isfile(generic_path)
             if found:
                 main_path = generic_path

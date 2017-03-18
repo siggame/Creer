@@ -143,3 +143,5 @@ def validate(prototype):
 
             if 'returns' in funct and funct['returns'] != None:
                 _check_required(funct['returns'], loc + ".returns")
+                if 'invalidValue' not in funct['returns']:
+                    raise Exception("{} requires an invalidValue for the return".format(loc))

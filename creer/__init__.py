@@ -1,19 +1,36 @@
+import os
 import creer.data
 import creer.prototype
 import creer.template
 import creer.writer
 import creer.input
 
-def run(game, inputs, output, merge=False, tagless=False, no_write=False):
-    datas = creer.data.parse(game)
+GAMES_DIR = '../Games/'
 
-    proto = creer.prototype.build(datas)
 
-    inputs = creer.input.validate(inputs)
+def run(games, inputs, output, merge=False, tagless=False, no_write=False):
+    if len(games) == 1 and games[0].lower() == 'all':
+        # then games is actually the list of all the game names, by dir names
+        games = [
+            name for name in sorted(os.listdir(GAMES_DIR))
+            if os.path.isdir(os.path.join(GAMES_DIR, name))
+        ]
 
-    generated_files = creer.template.build_all(proto, inputs, output, merge, tagless)
+    all_generated_files = []
+    for game in games:
+        print('~~~~~~ {} ~~~~~~'.format(game))
+        datas = creer.data.parse(game)
+
+        proto = creer.prototype.build(datas)
+
+        inputs = creer.input.validate(inputs)
+
+        all_generated_files.append(
+            creer.template.build_all(proto, inputs, output, merge, tagless)
+        )
 
     if not no_write:
-        creer.writer.write(generated_files)
+        for generated_files in all_generated_files:
+            creer.writer.write(generated_files)
     else:
         print("Creer Success! Not writing any files.")
