@@ -8,7 +8,7 @@ All inspiration taken from [MST's SIG-GAME framework](https://github.com/siggame
 ## Requirements
 [Mako](http://www.makotemplates.org/) and [Python](https://www.python.org/) 3.4.3+ are the only requirements.
 
-To install Make, using `pip` is probably your best bet.
+To install Mako, using `pip` is probably your best bet.
 
 `pip install mako`
 
