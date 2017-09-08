@@ -41,6 +41,10 @@ def camel_case_to_underscore(name):
     s1 = first_cap_re.sub(r'\1_\2', name)
     return all_cap_re.sub(r'\1_\2', s1).lower()
 
+def camel_case_to_hyphenate(name):
+    s1 = first_cap_re.sub(r'\1-\2', name)
+    return all_cap_re.sub(r'\1-\2', s1).lower()
+
 def copy_dict(source_dict, diffs):
     result=dict(source_dict) # Shallow copy
     result.update(diffs)

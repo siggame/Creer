@@ -1,7 +1,7 @@
 from mako.template import Template, exceptions
 from mako.lookup import TemplateLookup
 from time import gmtime, strftime
-from creer.utilities import uncapitalize, camel_case_to_underscore, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
+from creer.utilities import uncapitalize, camel_case_to_underscore, camel_case_to_hyphenate, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
 import creer.merge as merge
 import creer.githash as githash
 import os
@@ -65,6 +65,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     'uncapitalize': uncapitalize,
                     'camel_case_to_underscore': camel_case_to_underscore, # depreciated
                     'underscore': camel_case_to_underscore,
+                    'hyphenate': camel_case_to_hyphenate,
                     'sort_dict_keys': sort_dict_keys,
                     'upcase_first': upcase_first,
                     'lowercase_first': lowercase_first,
@@ -102,10 +103,11 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
 
                         print("  -> generating", system_path)
 
-                        def this_merge(pre_comment, key, alt, optional=False):
+                        def this_merge(pre_comment, key, alt, optional=False, help=True):
                             return merge.with_data(merge_data, pre_comment, key, alt,
                                 optional=optional,
-                                add_tags=(not tagless)
+                                add_tags=(not tagless),
+                                help=help,
                             )
                         p['merge'] = this_merge
 
