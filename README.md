@@ -6,9 +6,9 @@ The automatic code generating script for the Cadre framework, intending to creat
 All inspiration taken from [MST's SIG-GAME framework](https://github.com/siggame), and most of the terminology is assuming some familiarity with it as this is a spiritual successor to it.
 
 ## Requirements
-[Python](https://www.python.org/) 3.4.3+ is required, as are the python packages [Mako](http://www.makotemplates.org/) and[PyYAML](http://pyyaml.org/wiki/PyYAML).
+[Python](https://www.python.org/) 3.4.3+ is required, as are the python packages [Mako](http://www.makotemplates.org/), [binaryornot](https://github.com/audreyr/binaryornot), and [PyYAML](http://pyyaml.org/wiki/PyYAML).
 
-To install the python packages, using `pip` is probably your best bet.
+To install all these python packages, using `pip` is probably your best bet.
 
 `pip install -r requirements.txt`
 
@@ -22,6 +22,8 @@ One of the biggest pains with the old codegen was manually merging code between 
 Every folder in the `-i` input folders should have a `_templates/` folder present inside it. the folder/file names inside it should be using Mako syntax. if the file contains `${obj_key}` then every game class within the game data you are evaluating for will be generated. For examples look at the Cerveau and Joueur clients that are part of the Cadre framework.
 
 The syntax is all [Mako](http://www.makotemplates.org/), to give you the full power of Python when templating your Cadre projects.
+
+If your file is a binary files (such as an image), it's file path will still be templated, however it's contents will not and it will just be copied to the output directory/directories like any other file.
 
 ## Game Structure
 Games are defined by a data file that describes the Game, GameObjects within it, and the AI competitors code, and the entire structure is incredibly flexible.

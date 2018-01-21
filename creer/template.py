@@ -1,5 +1,6 @@
 from mako.template import Template, exceptions
 from mako.lookup import TemplateLookup
+from binaryornot.check import is_binary
 from time import gmtime, strftime
 from creer.utilities import uncapitalize, camel_case_to_underscore, camel_case_to_hyphenate, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
 import creer.merge as merge
@@ -33,6 +34,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     continue
 
                 filepath = os.path.join(root, filename)
+
                 dirs = list_dirs(filepath)
                 output_path = ""
                 for i, d in enumerate(dirs):
@@ -48,11 +50,15 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                             output_path = os.path.join(*output_dirs)
                         break
 
+                binary = is_binary(filepath) # don't template binary files, assume they are needed to work (like images)
 
-                print("templating", output_path)
-                with open(filepath, "r") as read_file:
-                    lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
-                    filecontents_template = Template(read_file.read(), lookup=lookup)
+                if binary:
+                    print("binary file", output_path)
+                else:
+                    print("templating", output_path)
+                    with open(filepath, "r") as read_file:
+                        lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
+                        filecontents_template = Template(read_file.read(), lookup=lookup)
 
                 filepath_template = Template(output_path, lookup=lookup)
 
@@ -94,6 +100,15 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     try:
                         templated_path = filepath_template.render(**p)
                         system_path = os.path.join(output, templated_path) if output else templated_path
+
+                        if binary:
+                            # copy the file, don't actually template it
+                            print("  -> copying", system_path)
+                            generated_files.append({
+                                'copy-from': filepath,
+                                'copy-dest': system_path
+                            })
+                            continue
 
                         merge_data = {}
                         if do_merge and os.path.isfile(system_path): # then we need to have merge data in the existing file with the new one we would be creating
