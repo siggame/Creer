@@ -1,4 +1,4 @@
-def default_type(obj, type_key='type', parent_name='"no parent name"'):
+def default_type(obj, type_key='type', parent_name='"no parent name"', nullable=True):
     if not type_key in obj:
         raise Exception("no type to default for " + parent_name)
 
@@ -10,6 +10,19 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
     if 'name' not in this_type:
         raise Exception("no name for type in " + parent_name)
 
+    this_type['nullable'] = None
+    this_type['const'] = bool(this_type['const']) if 'const' in this_type else False
+
+    CONST_KEYWORD = 'const '
+    if this_type['name'].startswith(CONST_KEYWORD):
+        this_type['const'] = True
+        # remove the const from the start of the string
+        this_type['name'] = this_type['name'][len(CONST_KEYWORD):]
+
+    if this_type['name'].endswith('!') or this_type['name'].endswith('?'):
+        this_type['nullable'] = this_type['name'].endswith('?')
+        this_type['name'] = this_type['name'][:-1] # cut off ! or ? mark
+
     # if this is a shorthand list, e.g. GameObject[], format it
     if this_type['name'].endswith('[]'):
         this_type['valueType'] = this_type['name'][0:-2]  # cut off the '[]'
@@ -17,11 +30,15 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
 
     this_type['is_game_object'] = this_type['name'][0].isupper() # primitives are always lower case, GameObjects are upper
 
+    if this_type['is_game_object']:
+        # game objects can be nullable
+        this_type['nullable'] = bool(this_type['nullable']) if 'nullable' in this_type else nullable
+
     if this_type['name'] == "list" or this_type['name'] == "dictionary":
         if not 'valueType' in this_type:
             raise Exception("no 'valueType' for nested type " + parent_name)
         else:
-            default_type(this_type, 'valueType', parent_name)
+            default_type(this_type, 'valueType', parent_name, nullable=False)
     else:
         this_type['valueType'] = None
 
@@ -29,7 +46,7 @@ def default_type(obj, type_key='type', parent_name='"no parent name"'):
         if not 'keyType' in this_type:
             raise Exception("no keyType for " + parent_name)
         else:
-            default_type(this_type, 'keyType', parent_name)
+            default_type(this_type, 'keyType', parent_name, nullable=False)
     else:
         this_type['keyType'] = None
 

@@ -8,5 +8,5 @@ Game:
 Player:
   attributes:
     opponent:
-      type: Player
+      type: const Player!
       description: This player's opponent in the game.

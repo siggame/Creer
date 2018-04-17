@@ -15,7 +15,7 @@ Game:
       type:
         name: dictionary
         keyType: string
-        valueType: GameObject
+        valueType: const GameObject!
       description: A mapping of every game object's ID to the actual game object. Primarily used by the server and client to easily refer to the game objects via ID.
       serverPredefined: true
     players:
@@ -23,7 +23,7 @@ Game:
       description: List of all the players in the game.
       serverPredefined: true
     session:
-      type: string
+      type: const string
       description: A unique identifier for the game instance that is being played.
       serverPredefined: true
 
@@ -31,11 +31,11 @@ GameObject:
   description: An object in the game. The most basic class that all game classes should inherit from automatically.
   attributes:
     id:
-      type: string
+      type: const string
       description: A unique id for each instance of a GameObject or a sub class. Used for client and server communication. Should never change value after being set.
       serverPredefined: true
     gameObjectName:
-      type: string
+      type: const string
       description: String representing the top level Class that this game object is an instance of. Used for reflection to create new instances on clients, but exposed for convenience should AIs want this data.
       serverPredefined: true
     logs:
@@ -56,11 +56,11 @@ Player:
   description: A player in this game. Every AI controls one player.
   attributes:
     name:
-      type: string
+      type: const string
       description: The name of the player.
       default: Anonymous
     clientType:
-      type: string
+      type: const string
       description: What type of client this is, e.g. 'Python', 'JavaScript', or some other language. For potential data mining purposes.
     won:
       type: boolean
