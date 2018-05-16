@@ -1,3 +1,15 @@
+def check_quotes(s):
+    if not (s.startswith('"') and s.endswith('"')):
+        raise Exception('not quoted')
+
+    return s.replace('"', '')
+
+default_type_literal_validator = {
+    "string": check_quotes,
+    "float": float,
+    "int": int,
+}
+
 def default_type(obj, type_key='type', parent_name='"no parent name"', nullable=True):
     if not type_key in obj:
         raise Exception("no type to default for " + parent_name)
@@ -12,12 +24,35 @@ def default_type(obj, type_key='type', parent_name='"no parent name"', nullable=
 
     this_type['nullable'] = None
     this_type['const'] = bool(this_type['const']) if 'const' in this_type else False
+    this_type['literals'] = None
 
     CONST_KEYWORD = 'const '
     if this_type['name'].startswith(CONST_KEYWORD):
         this_type['const'] = True
         # remove the const from the start of the string
         this_type['name'] = this_type['name'][len(CONST_KEYWORD):]
+
+    LITERAL_SEP = ' = '
+    if LITERAL_SEP in this_type['name']:
+        index = this_type['name'].index(LITERAL_SEP)
+        literals = this_type['name'][(index + len(LITERAL_SEP)):]
+        # remove the literals from the name now that we have it above
+        this_type['name'] = this_type['name'][:index]
+        if (this_type['name'] not in ['int', 'float', 'string']):
+            raise Exception('Literal type "{}" only valid on numbers and strings in {}.'.format(this_type['name'], parent_name))
+
+        split_literals = literals.split(' | ')
+        if '|' in split_literals:
+            raise Exception('Could not parse literal in ' + parent_name)
+
+        this_type['literals'] = []
+        for literal in split_literals:
+            validator = default_type_literal_validator[this_type['name']]
+            try:
+                valid = validator(literal)
+            except:
+                raise Exception('literal value {} is not valid for {} in {}'.format(literal, this_type['name'], parent_name))
+            this_type['literals'].append(valid)
 
     if this_type['name'].endswith('!') or this_type['name'].endswith('?'):
         this_type['nullable'] = this_type['name'].endswith('?')
@@ -72,6 +107,8 @@ def game_obj(obj, key):
             raise Exception("no 'description' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
         if not 'default' in attribute_parms:
             attribute_parms['default'] = None
+        elif attribute_parms['type']['literals'] and not attribute_parms['default'] in attribute_parms['type']['literals']:
+            raise Exception("'default' in obj '{0}'s attribute '{1}' is not a value of the literals.".format(key, attribute_key))
 
     functions_for(obj, key)
 
@@ -104,6 +141,8 @@ def functions_for(obj, key):
                     raise Exception("all args must be optional from this point in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
                 arg_parms['default'] = None
                 arg_parms['optional'] = False
+            elif arg_parms['type']['literals'] and arg_parms['default'] not in arg_parms['type']['literals']:
+                raise Exception("default not found in literals in obj '{0}'s function '{1}'s parameter '{2}'".format(key, function_key, arg_parms['name']))
             else: # they defined a default value, so this argument is optional
                 arg_parms['optional'] = True
                 if not 'optionals_start_index' in function_parms:
