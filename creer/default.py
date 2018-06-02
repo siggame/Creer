@@ -103,6 +103,8 @@ def game_obj(obj, key):
 
     for attribute_key, attribute_parms in obj['attributes'].items():
         default_type(attribute_parms, 'type', "'{0}'s attribute '{1}'.".format(key, attribute_key))
+        attribute_parms['setting'] = bool('setting' in attribute_parms and attribute_parms['setting'])
+
         if not 'description' in attribute_parms:
             raise Exception("no 'description' in obj '{0}'s attribute '{1}'.".format(key, attribute_key))
         if not 'default' in attribute_parms:
