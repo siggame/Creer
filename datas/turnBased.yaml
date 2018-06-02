@@ -28,3 +28,7 @@ Game:
       description: The maximum number of turns before the game will automatically end.
       serverPredefined: true
       default: 100
+    timeAddedPerTurn:
+      type: const int
+      description: The amount of time (in nano-seconds) added after each player performs a turn.
+      serverPredefined: true
