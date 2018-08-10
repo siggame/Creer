@@ -13,7 +13,20 @@ To install all these python packages, using `pip` is probably your best bet.
 `pip install -r requirements.txt`
 
 ## How to use
-`python main.py {main.data file} -i {../list/of/folders ./that/have/a/_templates/folder/ in/them} -o {path/to/output/folder}`
+First, pull cadre
+'git clone https://github.com/siggame/Cadre.git'
+
+Next, go into the cadre foldier and run this:
+'./init.sh'
+You should get messages out it successfully downloading the different repositories. If it fails:
+replace "git@github.com:" in each of the url paths with "https://github.com/"
+If it still doesn't work, contact fellow siggame members for support.
+This is then the point where you would run `pip install -r requirements.txt`
+
+Finally you can type the gen command. use --test to just test if it works without writing anything.
+'python main.py [game name] -i ../Cerveau -o .. --test'
+
+you may remove the -o and it will dump it in the default output file, and you may replace .. with whatever destination you wish.
 
 ### Merging
 One of the biggest pains with the old codegen was manually merging code between codegen runs. Creer is smart and can do the merging for you! Just add the `--merge` tag and target the Cadre repo you want to merge as the input and output, and it will automatically merge your code changes via code introspection.
