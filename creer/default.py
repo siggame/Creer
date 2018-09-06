@@ -22,7 +22,7 @@ def default_type(obj, type_key='type', parent_name='"no parent name"', nullable=
     if 'name' not in this_type:
         raise Exception("no name for type in " + parent_name)
 
-    this_type['nullable'] = None
+    this_type['nullable'] = bool(this_type['nullable']) if 'nullable' in this_type else None
     this_type['const'] = bool(this_type['const']) if 'const' in this_type else False
     this_type['literals'] = None
 
@@ -60,14 +60,20 @@ def default_type(obj, type_key='type', parent_name='"no parent name"', nullable=
 
     # if this is a shorthand list, e.g. GameObject[], format it
     if this_type['name'].endswith('[]'):
-        this_type['valueType'] = this_type['name'][0:-2]  # cut off the '[]'
+        this_type['valueType'] = this_type['name'][0:-2] + "!" # cut off the '[]', make it not nullable
         this_type['name'] = 'list'
 
     this_type['is_game_object'] = this_type['name'][0].isupper() # primitives are always lower case, GameObjects are upper
 
     if this_type['is_game_object']:
+        if this_type['nullable'] == None:
+            raise Exception('Game Object must have nullable (!?) explicitly set for ' + parent_name)
+
         # game objects can be nullable
-        this_type['nullable'] = bool(this_type['nullable']) if 'nullable' in this_type else nullable
+        set_nullable_to = bool(this_type['nullable'])
+
+        if not nullable and set_nullable_to:
+            raise Exception("Nested GameObject types cannot be null for " + parent_name)
 
     if this_type['name'] == "list" or this_type['name'] == "dictionary":
         if not 'valueType' in this_type:
@@ -156,10 +162,20 @@ def functions_for(obj, key):
         function_parms['argument_names'] = argument_names
 
         if 'returns' in function_parms:
-            default_type(function_parms['returns'], 'type', "obj '{0}'s function '{1}'s return".format(key, function_key))
-            if not 'description' in function_parms['returns']:
+            returns = function_parms['returns']
+            default_type(returns, 'type', "obj '{0}'s function '{1}'s return".format(key, function_key))
+            if not 'description' in returns:
                 raise Exception("no 'description' in obj '{0}'s function '{1}'s return".format(key, function_key))
-            if not 'default' in function_parms['returns']:
-                function_parms['returns']['default'] = None
+            if not 'default' in returns:
+                returns['default'] = None
+
+            if key != 'AI':
+                if not 'invalidValue' in returns:
+                    raise Exception("no 'invalidValue' in obj '{0}'s function '{1}'s return".format(key, function_key))
+
+                # check to make sure the invalid value is the right type
+                if returns['type']['is_game_object']:
+                    if not returns['type']['nullable'] or returns['invalidValue'] is not None:
+                        raise Exception("In obj '{0}'s function '{1}'s return it MUST be nullable and the invalidValue must be null".format(key, function_key))
         else:
             function_parms['returns'] = None
