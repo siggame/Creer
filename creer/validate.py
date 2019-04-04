@@ -145,3 +145,14 @@ def validate(prototype):
                 _check_required(funct['returns'], loc + ".returns")
                 if 'invalidValue' not in funct['returns']:
                     raise Exception("{} requires an invalidValue for the return".format(loc))
+
+                type_of_invalidValue = type(funct['returns']['invalidValue'])
+                expected_type_name_of_invalidValue = funct['returns']['type']['name']
+                if expected_type_name_of_invalidValue == 'string' and type_of_invalidValue != str:
+                    raise Exception("{}.invalidValue is not of expected string type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'boolean' and type_of_invalidValue != bool:
+                    raise Exception("{}.invalidValue is not of expected boolean type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'int' and type_of_invalidValue != int:
+                    raise Exception("{}.invalidValue is not of expected int type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'float' and type_of_invalidValue != int and type_of_invalidValue != float:
+                    raise Exception("{}.invalidValue is not of expected int type (was {})".format(loc, type_of_invalidValue))
