@@ -1,6 +1,51 @@
 from creer.utilities import extend, copy_dict, sort_dict_keys
 import creer.default as default
 import creer.validate
+import hashlib
+import json
+
+def _copy_from(obj, keys):
+    d = {}
+    for key in keys:
+        d[key] = obj[key]
+    return d
+
+def _clean_functions(obj):
+    cleaned = {}
+    if 'functions' in obj:
+        for func_name, func_data in obj['functions'].items():
+            cleaned[func_name] = {
+                'arguments': [],
+                'returns': None,
+            }
+
+            for attr in func_data['arguments']:
+                cleaned[func_name]['arguments'].append(_copy_from(attr, ['name', 'optional', 'type']))
+
+            if func_data['returns']:
+                cleaned[func_name]['returns'] = _copy_from(func_data['returns'], ['type'])
+    return cleaned
+
+def _clean_attributes(obj):
+    cleaned = {}
+    if 'attributes' in obj:
+        for attr_name, attr_data in obj['attributes'].items():
+            cleaned[attr_name] = _copy_from(attr_data, ['type'])
+    return cleaned
+
+def _proto_clean(proto):
+    cleaned = {
+        'AI': { 'functions': _clean_functions(proto['ai']) },
+        'Game': {'attributes': _clean_attributes(proto['game']) },
+    }
+
+    for game_obj_name, game_obj in proto['game_objects'].items():
+        cleaned[game_obj_name] = {
+            'attributes': _clean_attributes(game_obj),
+            'functions': _clean_functions(game_obj),
+        }
+
+    return cleaned
 
 def _inherit_into(obj, parent_class, game_objects):
     parent = game_objects[parent_class]
@@ -95,8 +140,19 @@ def build(datas):
 
     creer.validate.validate(prototype)
 
-    return {
+    proto = {
         'game_objects': game_objects,
         'game': game,
         'ai': ai
     }
+
+    min_game_data = _proto_clean(proto)
+    as_string = json.dumps(min_game_data, sort_keys=True)
+    as_bytes = bytes(as_string, 'utf8')
+
+    sha = hashlib.sha256()
+    sha.update(as_bytes)
+
+    proto['game_version'] = sha.hexdigest()
+
+    return proto

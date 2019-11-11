@@ -25,6 +25,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
     game_name = game['name']
     game_objects = prototype['game_objects']
     ai = prototype['ai']
+    game_version = prototype['game_version']
 
     if not inputs:
         inputs = default_input()
@@ -78,6 +79,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     'game_name': game_name,
                     'game_objs': game_objects,
                     'game_obj_names': sort_dict_keys(game_objects),
+                    'game_version': game_version,
                     'ai': ai,
                     'uncapitalize': uncapitalize,
                     'camel_case_to_underscore': camel_case_to_underscore, # depreciated
