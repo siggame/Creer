@@ -5,6 +5,7 @@ from time import gmtime, strftime
 from creer.utilities import uncapitalize, camel_case_to_underscore, camel_case_to_hyphenate, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
 import creer.merge as merge
 import creer.githash as githash
+import io
 import os
 import json
 
@@ -68,7 +69,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     print("binary file", output_path)
                 else:
                     print("templating", output_path)
-                    with open(filepath, "r") as read_file:
+                    with io.open(filepath, 'rt', newline='') as read_file:
                         lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
                         filecontents_template = Template(read_file.read(), lookup=lookup)
 
