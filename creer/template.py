@@ -2,7 +2,7 @@ from mako.template import Template, exceptions
 from mako.lookup import TemplateLookup
 from binaryornot.check import is_binary
 from time import gmtime, strftime
-from creer.utilities import uncapitalize, camel_case_to_underscore, camel_case_to_hyphenate, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type
+from creer.utilities import uncapitalize, camel_case_to_underscore, camel_case_to_hyphenate, list_dirs, copy_dict, sort_dict_keys, upcase_first, lowercase_first, is_primitive_type, human_string_list
 import creer.merge as merge
 import creer.githash as githash
 import io
@@ -93,6 +93,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     'game_objs': game_objects,
                     'game_obj_names': sort_dict_keys(game_objects),
                     'game_version': game_version,
+                    'parent_data_names': prototype['parent_data_names'],
                     'ai': ai,
                     'uncapitalize': uncapitalize,
                     'camel_case_to_underscore': camel_case_to_underscore, # depreciated
@@ -102,6 +103,7 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                     'upcase_first': upcase_first,
                     'lowercase_first': lowercase_first,
                     'is_primitive_type': is_primitive_type,
+                    'human_string_list': human_string_list,
                     'header': template_header,
                     'json': json,
                     'shared': {},

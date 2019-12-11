@@ -61,9 +61,12 @@ def _inherit_into(obj, parent_class, game_objects):
 def build(datas):
     parent_keys = ['main']
     parent_datas = []
+    parent_data_names = []
     while len(parent_keys) > 0:
         parent_key = parent_keys.pop()
         parent_data = datas[parent_key]
+        if parent_key != 'main':
+            parent_data_names.append(parent_key)
         parent_datas.append(parent_data)
 
         # now look if that data had parent data to continue investigating
@@ -153,6 +156,7 @@ def build(datas):
     sha = hashlib.sha256()
     sha.update(as_bytes)
 
+    proto['parent_data_names'] = parent_data_names
     proto['game_version'] = sha.hexdigest()
 
     return proto
