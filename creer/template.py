@@ -71,7 +71,10 @@ def build_all(prototype, inputs, output, do_merge=False, tagless=False):
                 else:
                     print("templating", output_path)
                     with io.open(filepath, 'rt', newline='') as read_file:
-                        lookup = TemplateLookup(directories=[os.path.dirname(filepath)])
+                        lookup = TemplateLookup(directories=[
+                            os.path.dirname(filepath),
+                            full_path
+                        ])
                         filecontents_template = Template(read_file.read(), lookup=lookup)
 
                 try:
