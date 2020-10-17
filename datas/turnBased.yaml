@@ -15,7 +15,7 @@ Game:
   - TurnBasedGame
   attributes:
     currentPlayer:
-      type: Player
+      type: Player!
       description: The player whose turn it is currently. That player can send commands. Other players cannot.
       serverPredefined: true
     currentTurn:
@@ -24,7 +24,11 @@ Game:
       serverPredefined: true
       default: 0
     maxTurns:
-      type: int
+      type: const int
       description: The maximum number of turns before the game will automatically end.
       serverPredefined: true
       default: 100
+    timeAddedPerTurn:
+      type: const int
+      description: The amount of time (in nano-seconds) added after each player performs a turn.
+      serverPredefined: true

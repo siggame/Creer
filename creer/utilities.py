@@ -41,6 +41,10 @@ def camel_case_to_underscore(name):
     s1 = first_cap_re.sub(r'\1_\2', name)
     return all_cap_re.sub(r'\1_\2', s1).lower()
 
+def camel_case_to_hyphenate(name):
+    s1 = first_cap_re.sub(r'\1-\2', name)
+    return all_cap_re.sub(r'\1-\2', s1).lower()
+
 def copy_dict(source_dict, diffs):
     result=dict(source_dict) # Shallow copy
     result.update(diffs)
@@ -57,6 +61,19 @@ def upcase_first(s):
 
 def lowercase_first(s):
     return s[0].lower() + s[1:]
+
+def human_string_list(strs, conjunction='or'):
+    n = len(strs)
+    if n == 0:
+        return ''
+    if n == 1:
+        return str(strs[0])
+    if n == 2:
+        return '{} {} {}'.format(strs[0], conjunction, strs[1])
+    # else list of >= 3
+    strs_safe = list(strs)
+    strs_safe[-1] = '{} {}'.format(conjunction, strs_safe[-1])
+    return ', '.join(strs_safe)
 
 def is_primitive_type(type_obj):
     return (type_obj['name'] in ['null', 'boolean', 'int', 'float', 'string', 'list', 'dictionary'])

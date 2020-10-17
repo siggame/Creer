@@ -17,7 +17,7 @@ def _parse_data(datas, key, path):
     try:
         print("-- PARSING", path)
         with open(path, 'r') as file:
-            data = _parser[ext[1:].lower()].load(file)
+            data = _parser[ext[1:].lower()].safe_load(file)
     except ValueError as e:
         print("Error reading data file '" + path + "' -", e)
         raise Exception("Error reading data file")

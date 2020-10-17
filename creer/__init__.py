@@ -9,6 +9,9 @@ GAMES_DIR = '../Games/'
 
 
 def run(games, inputs, output, merge=False, tagless=False, no_write=False):
+    if len(games) == 0:
+        raise Exception('No game(s) provided to run Creer against')
+
     if len(games) == 1 and games[0].lower() == 'all':
         # then games is actually the list of all the game names, by dir names
         games = [

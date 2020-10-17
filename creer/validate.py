@@ -1,13 +1,40 @@
 # this validates a prototype to ensure none of the data/types/setup will screw with an output template
 # basically, this validates Creer input data after it has been parsed
 
+import re
+
 _primitives = [
-    "string",
-    "boolean",
-    "int",
-    "float",
-    "list",
-    "dictionary"
+    'string',
+    'boolean',
+    'int',
+    'float',
+    'list',
+    'dictionary'
+]
+
+_dangerous_names = [
+    'true',
+    'false',
+    'if',
+    'else',
+    'continue',
+    'for',
+    'end',
+    'function',
+    'pass',
+    'assert',
+    'eval',
+    'break',
+    'import',
+    'from',
+    'catch',
+    'finally',
+    'null',
+    'while',
+    'double',
+    'float',
+    'goto',
+    'return'
 ]
 
 _valid_types = []
@@ -54,7 +81,7 @@ def _validate_description(obj, location):
             raise Exception("{} description contains illegal character {}".format(location, escaped))
 
     if desc[0].upper() != desc[0]:
-        raise Exception("Capitialize your doc string in " + location + "'s description")
+        raise Exception("Capitalize your doc string in " + location + "'s description")
 
     if desc[-1] != ".":
         raise Exception("End your doc strings as sentences with periods in " + location + "'s description")
@@ -72,6 +99,20 @@ def _check_required(obj, location, additional_reqs=None):
         for key, expected_type in additional_reqs.items():
             _check(obj, location, key, expected_type)
 
+def _validate_name(key, obj, pascal=False):
+    base_err = '"{}" is not a valid name for {}. '.format(key, obj)
+
+    search_re = '([A-Z][a-z]+)+' if pascal else '([a-z]+([A-Za-z])?)+'
+    casing = 'PascalCase' if pascal else 'camelCase'
+    match = re.search(search_re, key)
+    if not match or match[0] != key:
+        raise Exception(base_err + 'Name must be in {}.'.format(casing))
+
+    if key.lower() in _primitives:
+        raise Exception(base_err + 'Too similar to primitive type.')
+
+    if key.lower() in _dangerous_names:
+        raise Exception(base_err + 'Name too similar to popular programming keywords for some clients.')
 
 
 ###############################################################################
@@ -84,6 +125,8 @@ def validate(prototype):
 
     for key, value in prototype.items():
         if key[0] != "_" and key != "Game" and key != "AI":
+            _validate_name(key, "custom Game Object", pascal=True)
+
             _game_classes.append(key)
             _valid_types.append(key)
 
@@ -105,6 +148,9 @@ def validate(prototype):
                     if not parent_class in _game_classes:
                         raise Exception("{} has invalid parentClass '{}'".format(key, parent_class))
 
+        for attr_name, attr in value['attributes'].items():
+            _validate_name(attr_name, 'an attribute in ' + key)
+
         _check(value, key, 'functions', dict)
         for funct_key, funct in value['functions'].items():
             loc = key + "." + funct_key
@@ -115,6 +161,7 @@ def validate(prototype):
                 for i, arg in enumerate(funct['arguments']):
                     arg_loc = "{}.arguments[{}]".format(loc, i)
                     _check_required(arg, arg_loc, {'name': str })
+                    _validate_name(arg['name'], arg_loc)
                     arg_loc += " (" + arg['name'] + ")"
 
                     if 'default' in arg and arg['default'] != None:
@@ -145,3 +192,14 @@ def validate(prototype):
                 _check_required(funct['returns'], loc + ".returns")
                 if 'invalidValue' not in funct['returns']:
                     raise Exception("{} requires an invalidValue for the return".format(loc))
+
+                type_of_invalidValue = type(funct['returns']['invalidValue'])
+                expected_type_name_of_invalidValue = funct['returns']['type']['name']
+                if expected_type_name_of_invalidValue == 'string' and type_of_invalidValue != str:
+                    raise Exception("{}.invalidValue is not of expected string type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'boolean' and type_of_invalidValue != bool:
+                    raise Exception("{}.invalidValue is not of expected boolean type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'int' and type_of_invalidValue != int:
+                    raise Exception("{}.invalidValue is not of expected int type (was {})".format(loc, type_of_invalidValue))
+                if expected_type_name_of_invalidValue == 'float' and type_of_invalidValue != int and type_of_invalidValue != float:
+                    raise Exception("{}.invalidValue is not of expected int type (was {})".format(loc, type_of_invalidValue))
