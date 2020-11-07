@@ -29,6 +29,6 @@ Game:
       serverPredefined: true
       default: 100
     timeAddedPerTurn:
-      type: const int
+      type: const float
       description: The amount of time (in nano-seconds) added after each player performs a turn.
       serverPredefined: true
