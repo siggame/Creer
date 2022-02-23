@@ -1,6 +1,6 @@
 import re
 import os
-import collections
+import collections.abc as collections
 import operator
 
 def extend(d, u):
